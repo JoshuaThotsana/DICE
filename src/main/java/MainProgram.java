@@ -1,24 +1,22 @@
-import java.util.Arrays;
 
 public class MainProgram {
 
+    Number nim;
+
     public static void main(String[] args) throws Exception {
 
-        int n = 0;
+        Die die6 = new Die(6, new int[]{1,1,1,1,1,2});
+        die6.roll();
 
-        do {
-            Die die6 = new Die(10);
-            die6.roll();
+        Die die20 =  new Die(20);
+        die20.roll();
 
-//        Die die20 =  new Die(20);
-//        die20.roll();
+//        SuperClass die20 = DiceFactory.makeDie(20);
+//
+//        SuperClass die6 = DiceFactory.makeDie(6);
 
-            System.out.println(die6.value);
-//        System.out.println(die20.value);
-            n++;
-        } while (n<100);
-
-
+        System.out.println(die6.value);
+        System.out.println(die20.value);
     }
 
 }
