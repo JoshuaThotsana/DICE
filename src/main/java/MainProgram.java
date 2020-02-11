@@ -1,14 +1,24 @@
+import java.util.Arrays;
+
 public class MainProgram {
 
-    public static void main(String[] args) {
-        Die die6 = new Die(6, new int[]{1, 1, 1, 1, 1, 2});
-        die6.roll();
+    public static void main(String[] args) throws Exception {
 
-        Die die20 =  new Die(20);
-        die20.roll();
+        int n = 0;
 
-        System.out.println(die6.value);
-        System.out.println(die20.value);
+        do {
+            Die die6 = new Die(10);
+            die6.roll();
+
+//        Die die20 =  new Die(20);
+//        die20.roll();
+
+            System.out.println(die6.value);
+//        System.out.println(die20.value);
+            n++;
+        } while (n<100);
+
+
     }
 
 }
