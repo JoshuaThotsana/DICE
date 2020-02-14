@@ -1,6 +1,7 @@
 
 public class MainProgram {
 
+    private static DieFactory DiceFactory;
     Number nim;
 
     public static void main(String[] args) throws Exception {
@@ -11,9 +12,9 @@ public class MainProgram {
         Die die20 =  new Die(20);
         die20.roll();
 
-//        SuperClass die20 = DiceFactory.makeDie(20);
+//        DieFactory die20 = DieFactory.makeDie(20);
 //
-//        SuperClass die6 = DiceFactory.makeDie(6);
+//        DieFactory anotherDie6 = DieFactory.makeDie(6);
 
         System.out.println(die6.value);
         System.out.println(die20.value);
