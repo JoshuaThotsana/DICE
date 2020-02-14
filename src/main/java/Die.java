@@ -5,33 +5,24 @@ public class Die {
 
     int sides;
     int value;
-    int[] probabilities = {};
+    Number[] probabilities = {};
 
     public Die(int sides) {
         this.sides =sides;
     }
-    public Die(int sides, int[] probabilities) throws Exception {
-
-        for (int probability : probabilities) {
-            if (probability < 0) {
-                throw new NumberFormatException("Negative probabilities not allowed.");
-            }
+    public Die(int sides, Number[] probabilities) throws Exception {
+        if (negatives(probabilities)) {
+            throw new Exception("Negative probabilities are not allowed.");
         }
-        if (Arrays.stream(probabilities).sum() < 1) {
-            throw new Exception("Probability sum must be greater than 0");
+        if (sumLessOne(probabilities)) {
+            throw new Exception("Probability sum must be greater than 0.");
         }
-        for (int probability : probabilities) {
-            try {
-                int number = Integer.parseInt(String.valueOf(probability));
-            } catch (Exception e) {
-                throw new Exception("Only integer values allowed.");
-            }
+        if (!isInteger(probabilities)) {
+            throw new Exception("Only integer values are allowed.");
         }
-        for (int i = 1; i < probabilities.length; i++) {
-            probabilities[i] += probabilities[i-1];
-        }
-        setProbabilities(probabilities);
+        probabilities = cumulativeSum(probabilities);
         this.sides = sides;
+        this.probabilities = probabilities;
     }
 
     public void roll() {
@@ -42,20 +33,53 @@ public class Die {
             setValue(random);
         }
         else {
-            double random = Math.random()*this.probabilities[this.probabilities.length-1];
+            double random = Math.random()*this.probabilities[this.probabilities.length-1].intValue();
 
             for (int i = 0; i < this.probabilities.length; i++) {
-                if (random <= this.probabilities[i]) {
+                if (random <= this.probabilities[i].intValue()) {
                     setValue(i+1);
                     return;
                 }
             }
         }
     }
-    public void setValue(int value) {
+    void setValue(int value) {
         this.value = value;
     }
-    public void setProbabilities(int[] probabilities) {
+    void setProbabilities(Number[] probabilities) {
         this.probabilities = probabilities;
+    }
+
+    Number[] cumulativeSum(Number[] probabilities) {
+        for (int i = 1; i < probabilities.length; i++) {
+            probabilities[i] = probabilities[i].intValue() + probabilities[i-1].intValue();
+        }
+        return probabilities;
+    }
+
+    boolean negatives(Number[] probabilities){
+        for (Number probability : probabilities) {
+            if(probability.intValue() < 0 ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    boolean sumLessOne(Number[] probabilities) {
+        double sum = 0.00;
+        for (Number probability : probabilities) {
+            sum = sum + probability.doubleValue();
+        }
+        return sum < 1;
+    }
+
+    boolean isInteger(Number[] probabilities) {
+        for (Number probability : probabilities) {
+            if (!(probability instanceof Integer)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
