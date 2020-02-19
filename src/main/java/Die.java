@@ -1,82 +1,99 @@
+import java.util.Arrays;
+import java.util.stream.IntStream;
+
 public class Die {
 
     int sides;
     int value;
-    Number[] probabilities = {};
+    Number[] probabilities;
 
     public Die(int sides) {
-        this.sides =sides;
+        this.sides = sides;
     }
-    public Die(int sides, Number[] probabilities) throws Exception {
-        if (negatives(probabilities)) {
-            throw new Exception("Negative probabilities are not allowed.");
-        }
-        if (sumLessOne(probabilities)) {
-            throw new Exception("Probability sum must be greater than 0.");
-        }
-        if (!isInteger(probabilities)) {
-            throw new Exception("Only integer values are allowed.");
-        }
-        probabilities = cumulativeSum(probabilities);
+
+    public Die(int sides, Number[] probabilities) {
+
         this.sides = sides;
         this.probabilities = probabilities;
+
     }
 
-    public void roll() {
+    public void roll() throws Exception {
 
-        if (this.probabilities.length == 0) {
+        isInteger();
+        negativeNumbers();
+        sumLessOne();
 
-            int random = (int) (Math.random()*sides +1);
-            setValue(random);
+
+        if(probabilities == null) {
+            this.probabilities = new Number[this.sides];
+            Arrays.fill(probabilities,1);
         }
-        else {
-            double random = Math.random()*this.probabilities[this.probabilities.length-1].intValue();
+        int cumulativeSum = 0;
 
-            for (int i = 0; i < this.probabilities.length; i++) {
-                if (random <= this.probabilities[i].intValue()) {
-                    setValue(i+1);
-                    return;
+        for (Number probability : this.probabilities) {
+            cumulativeSum += Integer.parseInt(probability.toString());
+        }
+
+        int randomNumber = (int) (Math.random() * cumulativeSum +1);
+
+        for (int i = 0; i < this.sides; i++) {
+            randomNumber -= Integer.parseInt(this.probabilities[i].toString());
+
+            if(randomNumber <= 0) {
+                setValue(i+1);
+                return;
+            }
+        }
+    }
+
+    public void negativeNumbers() throws Exception {
+
+        try {
+            for (Number probability : this.probabilities) {
+                if (Double.parseDouble(probability.toString()) < 0) {
+                    throw new Exception();
                 }
             }
+        } catch (Exception e) {
+            System.out.println("Negative probabilities not allowed.");
+            System.exit(0);
         }
     }
-    void setValue(int value) {
+
+    public void sumLessOne() throws Exception {
+
+        int weightSum = 0;
+
+        for (Number probability : this.probabilities) {
+            weightSum += Double.parseDouble(probability.toString());
+        }
+
+        try {
+            if (weightSum < 1) {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            System.out.println("Probability sum must be greater than 0.");
+            System.exit(0);
+        }
+    }
+
+    public void isInteger() {
+        try {
+            for (Number probability : probabilities) {
+                if (!(probability instanceof Integer)) {
+                    throw new Exception();
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Only integer values allowed.");
+            System.exit(0);
+        }
+    }
+
+
+    public void setValue(int value) {
         this.value = value;
-    }
-    void setProbabilities(Number[] probabilities) {
-        this.probabilities = probabilities;
-    }
-
-    Number[] cumulativeSum(Number[] probabilities) {
-        for (int i = 1; i < probabilities.length; i++) {
-            probabilities[i] = probabilities[i].intValue() + probabilities[i-1].intValue();
-        }
-        return probabilities;
-    }
-
-    boolean negatives(Number[] probabilities){
-        for (Number probability : probabilities) {
-            if(probability.intValue() < 0 ) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    boolean sumLessOne(Number[] probabilities) {
-        double sum = 0.00;
-        for (Number probability : probabilities) {
-            sum = sum + probability.doubleValue();
-        }
-        return sum < 1;
-    }
-
-    boolean isInteger(Number[] probabilities) {
-        for (Number probability : probabilities) {
-            if (!(probability instanceof Integer)) {
-                return false;
-            }
-        }
-        return true;
     }
 }

@@ -1,22 +1,24 @@
-
 public class MainProgram {
-
-    private static DieFactory DiceFactory;
-    Number nim;
 
     public static void main(String[] args) throws Exception {
 
-        Die die6 = new Die(6, new Number[]{1,1,1,1,1,2});
-        die6.roll();
-
-        Die die20 =  new Die(20);
-        die20.roll();
-
-//        DieFactory die20 = DieFactory.makeDie(20);
+//        Die die6 = new Die(6);
+//        die6.roll();
 //
-//        DieFactory anotherDie6 = DieFactory.makeDie(6);
+//        System.out.println(die6.value);
 
-        System.out.println(die6.value);
-        System.out.println(die20.value);
+//        Die die20 = new Die(20);
+//        die20.roll();
+//
+//        System.out.println(die20.value);
+
+        Die dieDodgy6 = new Die (6, new Number[] {1,1,1,1,1,2});
+
+        dieDodgy6.roll();
+        System.out.println(dieDodgy6.value);
+
+//        Dice die20 = DiceFactory.makeDie(20);
+//        Dice anotherDie20 = DiceFactory.makeDie(20);
     }
+
 }
