@@ -1,6 +1,4 @@
 import java.util.Arrays;
-import java.util.stream.IntStream;
-
 public class Die {
 
     int sides;
@@ -18,22 +16,20 @@ public class Die {
 
     }
 
-    public void roll() throws Exception {
+    public void roll()  {
 
-        isInteger();
-        negativeNumbers();
-        sumLessOne();
 
 
         if(probabilities == null) {
             this.probabilities = new Number[this.sides];
             Arrays.fill(probabilities,1);
         }
-        int cumulativeSum = 0;
 
-        for (Number probability : this.probabilities) {
-            cumulativeSum += Integer.parseInt(probability.toString());
-        }
+        isInteger();
+        negativeNumbers();
+        sumLessOne();
+
+        int cumulativeSum = linearSum(this.probabilities,this.sides);
 
         int randomNumber = (int) (Math.random() * cumulativeSum +1);
 
@@ -47,7 +43,7 @@ public class Die {
         }
     }
 
-    public void negativeNumbers() throws Exception {
+    public void negativeNumbers() {
 
         try {
             for (Number probability : this.probabilities) {
@@ -61,14 +57,9 @@ public class Die {
         }
     }
 
-    public void sumLessOne() throws Exception {
+    public void sumLessOne() {
 
-        int weightSum = 0;
-
-        for (Number probability : this.probabilities) {
-            weightSum += Double.parseDouble(probability.toString());
-        }
-
+        int weightSum = linearSum(this.probabilities,this.sides);
         try {
             if (weightSum < 1) {
                 throw new Exception();
@@ -78,7 +69,6 @@ public class Die {
             System.exit(0);
         }
     }
-
     public void isInteger() {
         try {
             for (Number probability : probabilities) {
@@ -92,6 +82,15 @@ public class Die {
         }
     }
 
+    public int linearSum(Number[] probabilities, int n) {
+
+        if (n == 0) {
+            return 0;
+        }
+        else {
+            return linearSum(probabilities,n-1) + Integer.parseInt(probabilities[n-1].toString());
+        }
+    }
 
     public void setValue(int value) {
         this.value = value;
